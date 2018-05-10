@@ -8,4 +8,10 @@ class TwitchSpider(scrapy.Spider):
     ]
 
     def parse(self, response):
-        pass
+        streamer = response.xpath('//p[@data-a-target="carousel-broadcaster-displayname"]/text()').extract()
+        playing = response.xpath('//p[@data-a-target="carousel-user-playing-message"]/span/a/text()').extract()
+
+        yield {
+            'streamer': streamer,
+            'playing': playing
+        }
