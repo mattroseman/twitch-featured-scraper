@@ -8,6 +8,10 @@
 from scrapy import signals
 from scrapy.http import HtmlResponse
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 
 options = webdriver.ChromeOptions()
 options.add_argument('headless')
@@ -81,6 +85,9 @@ class TwitchFeaturedDownloaderMiddleware(object):
             return None
 
         driver.get(request.url)
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//p[@data-a-target='carousel-broadcaster-displayname']"))
+        )
 
         body = driver.page_source
         return HtmlResponse(driver.current_url, body=body, encoding='utf-8', request=request)
